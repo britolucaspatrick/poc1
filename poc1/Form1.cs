@@ -1,4 +1,7 @@
-﻿using poc1.Model;
+﻿using Binance.Net.Objects;
+using CryptoExchange.Net.Objects;
+using Kucoin.Net.Objects;
+using poc1.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,45 +25,195 @@ namespace poc1
 
         private void timerBinance_Tick(object sender, EventArgs e)
         {
-            //EXCHANGE BINANCE
-            List<OrderBinance> list = Service.getTradeListBinance("LTCBTC", "500");
-            binanceLTCBTCBuy.DataSource = list.FindAll(r => r.isBuyerMaker == true);
-            binanceLTCBTCSale.DataSource = list.FindAll(r => r.isBuyerMaker == false);
-            (binanceLTCBTCBuy.DataSource as List<OrderBinance>).ForEach(r => r.Symbol = "LTCBTC");
-            (binanceLTCBTCSale.DataSource as List<OrderBinance>).ForEach(r => r.Symbol = "LTCBTC");
+            //BOOK LTCBTC BINANCE 
+            int count = 0;
+            WebCallResult<BinanceOrderBook> bookBinance = Service.getBinanceOrderBook("LTCBTC", "500");
+            bookBinance.Data.Asks.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 0,
+                    market = "LTCBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    buyPrice = r.Price.ToString(),
+                    buyAmount = r.Quantity
+                });
+                entities.SaveChanges();
 
-            List<OrderBinance> listN = Service.getTradeListBinance("NANOBTC", "500");
-            binanceLTCNANOBuy.DataSource = listN.FindAll(r => r.isBuyerMaker == true);
-            binanceLTCNANOSale.DataSource = listN.FindAll(r => r.isBuyerMaker == false);
-            (binanceLTCNANOBuy.DataSource as List<OrderBinance>).ForEach(r => r.Symbol = "NANOBTC");
-            (binanceLTCNANOSale.DataSource as List<OrderBinance>).ForEach(r => r.Symbol = "NANOBTC");
+                count++;
+            });
+            count = 0;
+            bookBinance.Data.Bids.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 0,
+                    market = "LTCBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    sellPrice = r.Price.ToString(),
+                    sellAmount = r.Quantity
+                });
+                entities.SaveChanges();
 
-            entities.OrderBinances.AddRange((binanceLTCBTCBuy.DataSource as List<OrderBinance>));
-            entities.OrderBinances.AddRange((binanceLTCBTCSale.DataSource as List<OrderBinance>));
-            entities.OrderBinances.AddRange((binanceLTCNANOBuy.DataSource as List<OrderBinance>));
-            entities.OrderBinances.AddRange((binanceLTCNANOSale.DataSource as List<OrderBinance>));
 
+                count++;
+            });
 
-            //EXCHANGE KUCOIN
-            List<OrderKucoin> listLTCBTCSale = Service.getTradeListKuCoin("LTC-BTC", "sell");
-            (kucoinLTCBTCSale.DataSource as List<OrderKucoin>).AddRange(listLTCBTCSale);
+            //BOOK NANOBTC BINANCE 
+            count = 0;
+            bookBinance = Service.getBinanceOrderBook("NANOBTC", "500");
+            bookBinance.Data.Asks.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 0,
+                    market = "NANOBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    buyPrice = r.Price.ToString(),
+                    buyAmount = r.Quantity
+                });
+                entities.SaveChanges();
 
-            List<OrderKucoin> listNANOBTCSale = Service.getTradeListKuCoin("NANO-BTC", "sell");
-            (kucoinNANOBTCSale.DataSource as List<OrderKucoin>).AddRange(listNANOBTCSale);
+                count++;
+            });
+            count = 0;
+            bookBinance.Data.Bids.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 0,
+                    market = "NANOBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    sellPrice = r.Price.ToString(),
+                    sellAmount = r.Quantity
+                });
+                entities.SaveChanges();
+                count++;
+            });
 
-            List<OrderKucoin> listLTCBTCBuy = Service.getTradeListKuCoin("LTC-BTC", "buy");
-            (kucoinLTCBTCBuy.DataSource as List<OrderKucoin>).AddRange(listLTCBTCBuy);
+            //BOOK LTCBTC KUCOIN
+            count = 0;
+            WebCallResult<KucoinFullOrderBook> bookKucoin = Service.getOrderBookKuCoin("LTC-BTC", "sell");
+            bookKucoin.Data.Asks.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 1,
+                    market = "LTCBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    buyPrice = r.Price.ToString(),
+                    buyAmount = r.Quantity
+                });
+                entities.SaveChanges();
+                count++;
+            });
+            count = 0;
+            bookKucoin.Data.Bids.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 1,
+                    market = "LTCBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    sellPrice = r.Price.ToString(),
+                    sellAmount = r.Quantity
+                });
+                entities.SaveChanges();
+                count++;
+            });
 
-            List<OrderKucoin> listNANOBTCBuy = Service.getTradeListKuCoin("LTC-BTC", "buy");
-            (kucoinNANOBTCBuy.DataSource as List<OrderKucoin>).AddRange(listNANOBTCBuy);
+            //BOOK NANOBTC KUCOIN
+            count = 0;
+            bookKucoin = Service.getOrderBookKuCoin("NANO-BTC", "sell");
+            bookKucoin.Data.Asks.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 1,
+                    market = "NANOBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    buyPrice = r.Price.ToString(),
+                    buyAmount = r.Quantity
+                });
+                entities.SaveChanges();
+                count++;
+            });
+            count = 0;
+            bookKucoin.Data.Bids.ToList().ForEach(r =>
+            {
+                entities.Books.Add(new Book()
+                {
+                    exchange = 1,
+                    market = "NANOBTC",
+                    dateTimeNow = DateTime.Now,
+                    order = count,
+                    sellPrice = r.Price.ToString(),
+                    sellAmount = r.Quantity
+                });
+                entities.SaveChanges();
+                count++;
+            });
 
-            entities.OrderKucoins.AddRange((kucoinLTCBTCSale.DataSource as List<OrderKucoin>));
-            entities.OrderKucoins.AddRange((kucoinNANOBTCSale.DataSource as List<OrderKucoin>));
-            entities.OrderKucoins.AddRange((kucoinLTCBTCBuy.DataSource as List<OrderKucoin>));
-            entities.OrderKucoins.AddRange((kucoinNANOBTCBuy.DataSource as List<OrderKucoin>));
+            //TICKET LTCBTC KUCOIN  
+            WebCallResult<KucoinTick> ticketKucoin = Service.getTicketKuCoin("LTC-BTC");
+            entities.Tickers.Add(new Ticker()
+            {
+                exchange = 1,
+                market = "LTCBTC",
+                dateTimeNow = DateTime.Now,
+                trade = ticketKucoin.Data.Timestamp,
+                lastPrice = ticketKucoin.Data.LastTradePrice.ToString(),
+                lastAmount = ticketKucoin.Data.LastTradeQuantity.ToString(),
+            });
+            entities.SaveChanges();
 
-            entities.SaveChangesAsync();
+            //TICKET NANO KUCOIN
+            ticketKucoin = Service.getTicketKuCoin("NANO-BTC");
+            entities.Tickers.Add(new Ticker()
+            {
+                exchange = 1,
+                market = "NANOBTC",
+                dateTimeNow = DateTime.Now,
+                trade = ticketKucoin.Data.Timestamp,
+                lastPrice = ticketKucoin.Data.LastTradePrice.ToString(),
+                lastAmount = ticketKucoin.Data.LastTradeQuantity.ToString(),
+            });
+            entities.SaveChanges();
 
+            //TICKET LTCBTC BINANCE  
+            TicketBinance ticketBinance = Service.getTickerBinance("LTCBTC");
+            entities.Tickers.Add(new Ticker()
+            {
+                exchange = 0,
+                market = "LTCBTC",
+                dateTimeNow = DateTime.Now,
+                trade = DateTime.Now,
+                tradeTimeSpan = ticketBinance.openTime.ToString(),
+                lastPrice = ticketBinance.lastPrice.ToString(),
+                lastAmount = ticketBinance.lastQty.ToString(),
+            });
+            entities.SaveChanges();
+
+            //TICKET NANOBTC BINANCE  
+            ticketBinance = Service.getTickerBinance("NANOBTC");
+            entities.Tickers.Add(new Ticker()
+            {
+                exchange = 0,
+                market = "LTCBTC",
+                trade = DateTime.Now,
+                dateTimeNow = DateTime.Now,
+                tradeTimeSpan = ticketBinance.openTime.ToString(),
+                lastPrice = ticketBinance.lastPrice.ToString(),
+                lastAmount = ticketBinance.lastQty.ToString(),
+            });
+            entities.SaveChanges();
         }
 
         private void Exchange_Load(object sender, EventArgs e)

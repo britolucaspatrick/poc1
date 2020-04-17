@@ -46,11 +46,32 @@ namespace poc1
             modelBuilder.Entity<OrderKucoin>().Property(r => r.id).HasColumnName("id");
             modelBuilder.Entity<OrderKucoin>().HasKey(r => r.id);
 
+            modelBuilder.Entity<Book>().Property(r => r.exchange).HasColumnName("exchange");
+            modelBuilder.Entity<Book>().Property(r => r.market).HasColumnName("market");
+            modelBuilder.Entity<Book>().Property(r => r.dateTimeNow).HasColumnName("dateTimeNow");
+            modelBuilder.Entity<Book>().Property(r => r.order).HasColumnName("order");
+            modelBuilder.Entity<Book>().Property(r => r.buyPrice).HasColumnName("buyPrice");
+            modelBuilder.Entity<Book>().Property(r => r.buyAmount).HasColumnName("buyAmount");
+            modelBuilder.Entity<Book>().Property(r => r.sellPrice).HasColumnName("sellPrice");
+            modelBuilder.Entity<Book>().Property(r => r.sellAmount).HasColumnName("sellAmount");
+            modelBuilder.Entity<Book>().Property(r => r.id).HasColumnName("id");
+            modelBuilder.Entity<Book>().HasKey(r => r.id);
+
+            modelBuilder.Entity<Ticker>().Property(r => r.exchange).HasColumnName("exchange");
+            modelBuilder.Entity<Ticker>().Property(r => r.market).HasColumnName("market");
+            modelBuilder.Entity<Ticker>().Property(r => r.dateTimeNow).HasColumnName("dateTimeNow");
+            modelBuilder.Entity<Ticker>().Property(r => r.trade).HasColumnName("trade");
+            modelBuilder.Entity<Ticker>().Property(r => r.lastPrice).HasColumnName("lastPrice");
+            modelBuilder.Entity<Ticker>().Property(r => r.lastAmount).HasColumnName("lastAmount");
+            modelBuilder.Entity<Ticker>().Property(r => r.changeRenew).HasColumnName("changeRenew");
+            modelBuilder.Entity<Ticker>().Property(r => r.id).HasColumnName("id");
+            modelBuilder.Entity<Ticker>().HasKey(r => r.id);
 
         }
 
         public virtual DbSet<OrderBinance> OrderBinances { get; set; }
         public virtual DbSet<OrderKucoin> OrderKucoins { get; set; }
-
+        public virtual DbSet<Book> Books { get; set; }
+        public virtual DbSet<Ticker> Tickers { get; set; }
     }
 }

@@ -1,12 +1,15 @@
-﻿using Newtonsoft.Json;
-using poc1.Model;
-using System;
+﻿using Binance.Net.Objects;
+using CryptoExchange.Net.Objects;
+using Kucoin.Net;
+using Kucoin.Net.Objects;
+using Binance.Net;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Security.Cryptography;
+using System;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using poc1.Model;
 
 namespace poc1
 {
@@ -22,46 +25,46 @@ namespace poc1
 
         protected static string KCAPIPASSPHRASE = "Ppatrick@2020";
 
-        public static List<OrderBinance> getTradeListBinance(string symbol, string limit)
+        public static WebCallResult<BinanceOrderBook> getBinanceOrderBook(string symbol, string side)
+        {
+            BinanceClientOptions clientOptions = new BinanceClientOptions(Uri);
+            BinanceClient binance = new BinanceClient(clientOptions);
+            return binance.GetOrderBook(symbol);
+
+        }
+
+        public static TicketBinance getTickerBinance(string symbol)
         {
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(Uri);
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(APIKey)));
-            var result = client.GetAsync("/api/v3/trades?symbol=" + symbol + "&limit=" + limit).Result;
+            var result = client.GetAsync("/api/v3/ticker/24hr?symbol=" + symbol).Result;
             if (result.IsSuccessStatusCode)
             {
                 Task<string> ret = result.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<OrderBinance>>(ret.Result);
+                return JsonConvert.DeserializeObject<TicketBinance>(ret.Result);
             }
             else return null;
         }
 
-        public static List<OrderKucoin> getTradeListKuCoin(string symbol, string side)
+        public static WebCallResult<KucoinFullOrderBook> getOrderBookKuCoin(string symbol, string side)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(UriKucoin);
-            string timestamp = DateTime.Now.TimeOfDay.Ticks.ToString();
-
-            string str_to_sign = timestamp + "GET" + "/api/v1/hist-orders";
-            var inferno = Encoding.ASCII.GetBytes(str_to_sign + APISecretKucoin);
+            KucoinClientOptions clientOptions = new KucoinClientOptions();
+            clientOptions.ApiCredentials = new KucoinApiCredentials(KCAPIKEY, APISecretKucoin, KCAPIPASSPHRASE);
             
-            HMACSHA256 hmac = new HMACSHA256(inferno);
+            KucoinClient kucoin = new KucoinClient(clientOptions);
+            return kucoin.GetOrderBook(symbol);
             
+        }
 
-            client.DefaultRequestHeaders.Add("KC-API-KEY", KCAPIKEY);
-            client.DefaultRequestHeaders.Add("KC-API-SIGN", Convert.ToBase64String(hmac.ComputeHash(inferno)));
+        public static WebCallResult<KucoinTick> getTicketKuCoin(string symbol)
+        {
+            KucoinClientOptions clientOptions = new KucoinClientOptions();
+            clientOptions.ApiCredentials = new KucoinApiCredentials(KCAPIKEY, APISecretKucoin, KCAPIPASSPHRASE);
 
+            KucoinClient kucoin = new KucoinClient(clientOptions);
+            return kucoin.GetTicker(symbol);
 
-            client.DefaultRequestHeaders.Add("KC-API-PASSPHRASE", KCAPIPASSPHRASE);
-            client.DefaultRequestHeaders.Add("KC-API-TIMESTAMP", timestamp);
-
-            var result = client.GetAsync("/api/v1/hist-orders?symbol=" + symbol + "&side=" + side).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                Task<string> ret = result.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<OrderKucoin>>(ret.Result);
-            }
-            else return null;
         }
     }
 }
