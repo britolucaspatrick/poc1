@@ -29,7 +29,7 @@ namespace poc1
         {
             BinanceClientOptions clientOptions = new BinanceClientOptions(Uri);
             BinanceClient binance = new BinanceClient(clientOptions);
-            return binance.GetOrderBook(symbol);
+            return binance.GetOrderBook(symbol, limit: 20);
 
         }
 
@@ -38,7 +38,7 @@ namespace poc1
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(Uri);
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(APIKey)));
-            var result = client.GetAsync("/api/v3/ticker/24hr?symbol=" + symbol).Result;
+            var result = client.GetAsync("/api/v3/trades?symbol=" + symbol + "&limit=1").Result; //price, qty, time
             if (result.IsSuccessStatusCode)
             {
                 Task<string> ret = result.Content.ReadAsStringAsync();

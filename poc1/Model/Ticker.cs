@@ -12,10 +12,11 @@ namespace poc1.Model
         public int exchange { get; set; } //0 - binance 1 - kucoin
         public string market { get; set; }
         public DateTime dateTimeNow { get; set; }
+        public DateTime dateRequest { get; set; }
         public DateTime trade { get; set; }
         public string tradeTimeSpan { get; set; }
         public string lastPrice { get; set; }
-        public string lastAmount { get; set; } //volume (price * quantidade)
+        public string lastAmount { get; set; } 
         public bool changeRenew { get; set; }
     }
 }

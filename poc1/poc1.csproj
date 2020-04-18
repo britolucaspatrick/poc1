@@ -178,6 +178,14 @@
     <Compile Include="Migrations\202004172226147_changasd1.Designer.cs">
       <DependentUpon>202004172226147_changasd1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004181420159_addcolumn-daterequised-ticker.cs" />
+    <Compile Include="Migrations\202004181420159_addcolumn-daterequised-ticker.Designer.cs">
+      <DependentUpon>202004181420159_addcolumn-daterequised-ticker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004181543041_addcolumn-daterequest-changename-ticker.cs" />
+    <Compile Include="Migrations\202004181543041_addcolumn-daterequest-changename-ticker.Designer.cs">
+      <DependentUpon>202004181543041_addcolumn-daterequest-changename-ticker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
@@ -225,6 +233,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004172226147_changasd1.resx">
       <DependentUpon>202004172226147_changasd1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004181420159_addcolumn-daterequised-ticker.resx">
+      <DependentUpon>202004181420159_addcolumn-daterequised-ticker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004181543041_addcolumn-daterequest-changename-ticker.resx">
+      <DependentUpon>202004181543041_addcolumn-daterequest-changename-ticker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

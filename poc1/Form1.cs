@@ -180,7 +180,7 @@ namespace poc1
             {
                 exchange = 1,
                 market = "NANOBTC",
-                dateTimeNow = DateTime.Now,
+                dateTimeNow = DateTime.Now, 
                 trade = ticketKucoin.Data.Timestamp,
                 lastPrice = ticketKucoin.Data.LastTradePrice.ToString(),
                 lastAmount = ticketKucoin.Data.LastTradeQuantity.ToString(),
@@ -206,10 +206,10 @@ namespace poc1
             entities.Tickers.Add(new Ticker()
             {
                 exchange = 0,
-                market = "LTCBTC",
+                market = "NANOBTC",
                 trade = DateTime.Now,
-                dateTimeNow = DateTime.Now,
-                tradeTimeSpan = ticketBinance.openTime.ToString(),
+                dateTimeNow = DateTime.Now, //no ato do envio da requisicao
+                tradeTimeSpan = ticketBinance.openTime.ToString(),//recent trades list (1) - campo time
                 lastPrice = ticketBinance.lastPrice.ToString(),
                 lastAmount = ticketBinance.lastQty.ToString(),
             });
